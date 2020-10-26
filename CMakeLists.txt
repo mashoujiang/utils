@@ -14,18 +14,18 @@ set(TARGET_SHARED utils_shared)
 
 # ======
 # install static library
-#add_library(${TARGET_STATIC} STATIC)
-#target_compile_features(${TARGET_STATIC} PRIVATE cxx_std_11)
-#target_sources(${TARGET_STATIC} PRIVATE ${SRCS})
-#target_include_directories(${TARGET_STATIC}
-#        PUBLIC
-#        $<INSTALL_INTERFACE:include>
-#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-#        #        PRIVATE
-#        #        ${OpenCV_INCLUDE_DIRS}
-#        )
-#target_link_libraries(${TARGET_STATIC} PRIVATE ${OpenCV_LIBRARIES})
-#set_target_properties(${TARGET_STATIC} PROPERTIES OUTPUT_NAME "utils")
+add_library(${TARGET_STATIC} STATIC)
+target_compile_features(${TARGET_STATIC} PRIVATE cxx_std_11)
+target_sources(${TARGET_STATIC} PRIVATE ${SRCS})
+target_include_directories(${TARGET_STATIC}
+        PUBLIC
+        $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        #        PRIVATE
+        #        ${OpenCV_INCLUDE_DIRS}
+        )
+target_link_libraries(${TARGET_STATIC} PRIVATE ${OpenCV_LIBRARIES})
+set_target_properties(${TARGET_STATIC} PROPERTIES OUTPUT_NAME "utils")
 
 # ======
 # install shared library
@@ -44,7 +44,7 @@ set_target_properties(${TARGET_SHARED} PROPERTIES OUTPUT_NAME "utils")
 set_target_properties(${TARGET_SHARED} PROPERTIES VERSION ${${TARGET_NAME}_VERSION} SOVERSION 1)
 
 # both static and shared library co-exist
-#set_target_properties(${TARGET_STATIC} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+set_target_properties(${TARGET_STATIC} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 set_target_properties(${TARGET_SHARED} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 
 # ======
@@ -52,7 +52,7 @@ set_target_properties(${TARGET_SHARED} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 ## comes from GNUInstallDirs, which includes lots of predefined system
 ## paths.
 include(GNUInstallDirs)
-install(TARGETS ${TARGET_SHARED}
+install(TARGETS ${TARGET_SHARED} ${TARGET_STATIC}
         EXPORT ${TARGET_NAME}Targets
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
